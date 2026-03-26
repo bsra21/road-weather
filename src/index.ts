@@ -1,5 +1,6 @@
 import express from "express";
 import { geocodePlace } from "./services/geocoding.js";
+import { buildRideAdvice, buildRiskSegments } from "./services/insights.js";
 import { evaluatePointRisk, summarizeRouteRisk } from "./services/risk.js";
 import { getRouteCoordinates, sampleRouteByDistance } from "./services/routing.js";
 import { getWeatherForRoute } from "./services/weather.js";
@@ -46,6 +47,8 @@ app.get("/api/route-weather", async (req, res) => {
     }));
 
     const routeRisk = summarizeRouteRisk(pointsWithRisk);
+    const segments = buildRiskSegments(pointsWithRisk);
+    const advice = buildRideAdvice(routeRisk.overallRisk);
 
     return res.json({
       from: { query: from, ...fromCoords },
@@ -54,6 +57,8 @@ app.get("/api/route-weather", async (req, res) => {
       departureTimeUtc: new Date(departureMs).toISOString(),
       averageSpeedKmh,
       routeRisk,
+      segments,
+      advice,
       points: pointsWithRisk
     });
   } catch (error) {

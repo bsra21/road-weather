@@ -176,5 +176,8 @@ Aşağıdaki alanları görüyorsan doğru (güncel) kod çalışıyor demektir:
 - `points[].forecastTimeUtc`
 - `points[].risk` ve `points[].reasons`
 
+- `segments[]`: rota risk segmentleri (`startKm`, `endKm`, `risk`)
+- `advice`: genel sürüş önerisi ve ekipman ipuçları
+
 Eğer bunlar yoksa, eski dosyalar çalışıyordur; `src/index.ts` ve `src/services/weather.ts` dosyalarını tekrar kontrol et.
 
