@@ -1,5 +1,6 @@
 import express from "express";
 import { geocodePlace } from "./services/geocoding.js";
+import { evaluatePointRisk, summarizeRouteRisk } from "./services/risk.js";
 import { getRouteCoordinates, sampleRouteByDistance } from "./services/routing.js";
 import { getWeatherForRoute } from "./services/weather.js";
 
@@ -39,13 +40,21 @@ app.get("/api/route-weather", async (req, res) => {
       averageSpeedKmh
     });
 
+    const pointsWithRisk = weather.map((point) => ({
+      ...point,
+      ...evaluatePointRisk(point)
+    }));
+
+    const routeRisk = summarizeRouteRisk(pointsWithRisk);
+
     return res.json({
       from: { query: from, ...fromCoords },
       to: { query: to, ...toCoords },
       sampleStepKm: 50,
       departureTimeUtc: new Date(departureMs).toISOString(),
       averageSpeedKmh,
-      points: weather
+      routeRisk,
+      points: pointsWithRisk
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unexpected error";

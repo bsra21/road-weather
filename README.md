@@ -160,3 +160,21 @@ git push origin main
 - Sadece API'den gelen ilk saat verisini kullanmak (yanlış olabilir).
 - Doğrusu: rotadaki noktaya **varış zamanı** hesaplayıp o saate denk gelen forecast'i almak.
 
+
+---
+
+
+## 10) Beklenen yeni response alanları
+
+Aşağıdaki alanları görüyorsan doğru (güncel) kod çalışıyor demektir:
+
+- `departureTimeUtc`
+- `averageSpeedKmh`
+- `routeRisk.overallRisk`
+- `points[].etaHours`
+- `points[].expectedAtUtc`
+- `points[].forecastTimeUtc`
+- `points[].risk` ve `points[].reasons`
+
+Eğer bunlar yoksa, eski dosyalar çalışıyordur; `src/index.ts` ve `src/services/weather.ts` dosyalarını tekrar kontrol et.
+
